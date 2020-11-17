@@ -1,0 +1,22 @@
+<?php
+if(count($result) > 0){ 
+	foreach($result as $message) { ?>
+		<a href="#" class="p-3 d-flex border-bottom">
+	       <div class="wd-90p">
+	            <div class="d-flex">
+	                <h5 class="mb-1 name"><?= $message->tbl_broadcast_message ?></h5>
+	                </div>
+	            <p class="mb-0 desc"><?= $message->tbl_broadcast_insertdate ?></p>
+	        </div>
+	    </a>
+	<?php }
+}else{ ?>
+	<a href="#" class="p-3 d-flex border-bottom">
+       <div class="wd-90p">
+            <div class="d-flex">
+                <h5 class="mb-1 name">Message List Empty!</h5>
+                </div>
+            <p class="mb-0 desc">Please broadcast Message</p>
+        </div>
+    </a>
+<?php } ?>

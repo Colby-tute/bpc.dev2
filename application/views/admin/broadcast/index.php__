@@ -1,0 +1,221 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+?>
+<?= $header; ?>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" rel="stylesheet">
+
+<div class="container">
+
+    <!-- breadcrumb -->
+    <div class="breadcrumb-header justify-content-between">
+        <div>
+            <h4 class="content-title mb-2">Broadcast Message</h4>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="<?= site_url('Home') ?>">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Broadcast Message</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <div class="">
+            <!-- row opened -->
+            <div class="row row-sm">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <div class="card">
+                        <div class="card-body iconfont text-left">
+                            <p><?php if ($this->session->flashdata('danger')) { ?>
+                                 <div id="infoMessage" class="alert alert-danger mt25"><?php echo $this->session->flashdata('danger');?></div>
+                            <?php } else if ($this->session->flashdata('success')) { ?>
+                                 <div id="infoMessage" class="alert alert-success mt25"><?php echo $this->session->flashdata('success');?></div>
+                            <?php }
+                            ?>
+                            </p>
+
+                            <div class="row"> 
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" style="min-height: 300px;">
+	                                <div class="t4 main-message-list chat-scroll ps broadcast-box" id="broadcast-box" style="overflow: scroll;">
+	                                </div>
+                                </div>
+                            </div>
+                            <div class="input-group mb-0">
+                                <input type="text" id="message" class="form-control" placeholder="Enter Message">
+                                <input type="text" id="expiry" class="form-control" placeholder="Expiry Date">
+                                <span class="input-group-append">
+                                    <button class="btn ripple btn-primary" type="button" id="send-message">Broadcast</button>
+                                </span>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <!-- row closed -->
+        </div>
+</div>
+
+<?= $footer; ?>
+<div class="modal fade" id="editMessage">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Update Message</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+          <input class="form-control" type="text" name="messageText" id="messageText">
+          <input type="hidden" name="messageId" id="messageId">
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-success updateMessage" data-dismiss="modal">Update</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
+<script type="text/javascript">
+    $(function() {
+        $('#expiry').datetimepicker({
+            format: "Y-m-d H:i"
+        });
+    });
+
+	$(document).ready(function() {
+		updateMessage();
+
+        $('#send-message').click(function(){
+        	var message = $("#message");
+        	if(message.val() == ''){
+        		message.css('border','1px solid red');
+        		return false;
+        	}else{
+        		$(message).css('border','1px solid #e2e8f5');
+        		sendMessage(message);	
+        	}
+        });
+     });
+
+	function sendMessage(message){
+        var message = $(message).val();
+        if($("#expiry").val() == ''){
+           var tbl_broadcast_expiry = null; 
+        }else{
+            var tbl_broadcast_expiry = $("#expiry").val();
+        }
+		var id = "<?= $this->session->userdata('id_user') ?>";
+        jQuery.ajax({
+            type: "POST",
+            url: "<?=base_url()?>incubator/Broadcast/sendMessage",
+            dataType: 'text',
+            data: {tbl_broadcaster_id:id,tbl_broadcast_message:message,tbl_broadcast_expiry:tbl_broadcast_expiry},
+            success: function(data) 
+            { 
+        		updateMessage();
+            },
+            error: function(){
+            	alert('Error');
+            }
+        });
+	}
+
+	function updateMessage(){
+		var id = "<?= $this->session->userdata('id_user') ?>";
+		jQuery.ajax({
+            type: "POST",
+            url: "<?=base_url()?>incubator/Broadcast/getMessage",
+            dataType: 'html',
+            data: {tbl_broadcaster_id:id},
+            success: function(data) 
+            { 
+            	$("#broadcast-box").html(data);
+            	var scroller = $('#broadcast-box');
+			    var height = scroller[0].scrollHeight - $(scroller).height()+100;
+			    $(scroller).stop().animate({ scrollTop: height }, "slow");
+                $("#message").val('');
+            	$("#expiry").val('');
+            },
+            error: function(){
+            	alert('Error');
+            }
+        });
+	}
+
+    $(".updateMessage").click(function(){
+        var message = $("#messageText").val();
+        var id = $("#messageId").val();
+        // if($("#expiry").val() == ''){
+        //    var tbl_broadcast_expiry = null; 
+        // }else{
+        //     var tbl_broadcast_expiry = $("#expiry").val();
+        // }
+        jQuery.ajax({
+            type: "POST",
+            url: "<?=base_url()?>incubator/Broadcast/updateMessage",
+            dataType: 'text',
+            data: {tbl_broadcast_id:id,tbl_broadcast_message:message},
+            success: function(data) 
+            { 
+                if(data == true){
+                    updateMessage();
+                    alert('Message Updated Successfully.');
+                }else{
+
+                    alert('Something went wrong. Please try again!');
+                }
+            },
+            error: function(){
+                alert('Error');
+            }
+        });
+    });
+
+    $("body").delegate('.edit','click', function(){
+        var id = $(this).data('id');
+        var message = $(this).data('message');
+        $("#messageId").val(id);
+        $("#messageText").val(message);
+    });
+
+    $("body").delegate('.delete','click', function(){
+        var id = $(this).data('id');
+        if(confirm('Are you sure want to delete this message?') == true){
+            jQuery.ajax({
+                type: "POST",
+                url: "<?=base_url()?>incubator/Broadcast/deleteMessage",
+                dataType: 'json',
+                data: {tbl_broadcast_id:id},
+                success: function(data) 
+                { 
+                    if(data == true){
+                        updateMessage();
+                        alert('Message Deleted Successfully.');
+                    }else{
+                        alert('Something went wring. please try again!');
+                    }
+                },
+                error: function(){
+                    alert('Error');
+                }
+            });
+        }else{
+            return false;
+        }
+    });
+</script>
+<style type="text/css">
+    .edit, .delete{
+        padding: 0 10px;
+        color: #000;
+    }
+    .edit:hover, .delete:hover{
+        padding: 0 10px;
+        color: blue;
+    }
+</style>

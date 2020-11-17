@@ -1,0 +1,143 @@
+<?php 
+defined('BASEPATH') OR exit('No direct script access allowed');
+?>
+        <?= $header; ?>
+        <div class="container">
+        <div class="breadcrumb-header justify-content-between">
+            <div>
+                <h4 class="content-title mb-2">Incubation Application</h4>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="<?= site_url('Home') ?>">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="<?= site_url('user/smme/Application') ?>">Application & Status</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Application for Incubation</li>
+                    </ol>
+                </nav>
+
+            </div>
+            <div class="my-auto breadcrumb-right">
+							<a href="<?= site_url('user/smme/Application') ?>" class=""><button class="btn btn-outline-primary mr-3"><span class="icon-label"><i class="fa fa-bell mr-2"></i></span><span class="btn-text">Status </span></button></a>
+							<a href="<?= site_url('Profile/view_profile/'.$this->session->userdata('id_user')) ?>" class=""><button class="btn btn-outline-danger mr-3"><span class="icon-label"><i class="fa fa-user mr-2"></i> </span><span class="btn-text">Personal Details </span></button></a>
+							<button class="btn btn-success mr-0"><span class="icon-label"><i class="fa fa-question-circle mr-2"></i> </span><span class="btn-text">Help </span></button>
+						</div>
+        </div>
+
+        <div class="">
+            <!-- row opened -->
+            <div class="row row-sm">
+                <div class="col-lg-12">
+				
+				<div class="card">
+				
+				<!-- Application Terms and COnditions -->
+				<div class="alert alert-danger mg-b-0" role="alert">
+		<button aria-label="Close" class="close" data-dismiss="alert" type="button">
+			<span aria-hidden="true">&times;</span>
+		</button>
+		<strong>100% Business & Personal Details!</strong> <br /> Before submitting your application for incubation, please ensure that your Business and Personal Details are fully completed.
+	</div>
+
+				<!-- / Application Terms and COnditions -->
+                        <?php echo form_open_multipart("user/smme/Application/add", 'class="login" data-toggle="validator"'); ?>
+                        <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 form-group mb-3">
+                                        <label class="form-label">Select Preferred | INCUBATOR</label>
+                                        <select id="incubator_id" name="incubator_id" class="form-control">
+                                                <option value="">---</option>
+                                                <?php
+                                                foreach ($select_incubator as $key => $value) { ?>
+                                                    <option value="<?php echo $value->tbl_users_id; ?>"><?php echo $value->tbl_users_firstname.' '.$value->tbl_users_lastname.' | INCU-'.$value->tbl_users_user_uniqueid;?></option>
+                                                <?php } ?>
+                                            </select>
+                                                       
+                                    </div>
+
+                                    <div class="col-md-6 form-group mb-3">
+                                        <label class="form-label">Select Preferred | BDSP, COACH  or MENTOR</label>
+                                        <select id="bdsp_id" name="bdsp_id" class="form-control">
+                                                <option value="">---</option>
+                                                <?php
+                                                foreach ($select_bdsp as $key => $value) { ?>
+                                                    <option value="<?php echo $value->tbl_users_id; ?>"><?php echo $value->tbl_users_firstname.' '.$value->tbl_users_lastname.' | BDSP-'.$value->tbl_users_user_uniqueid;?></option>
+                                                <?php } ?>
+                                            </select>
+                                    </div>
+                                </div>
+
+                               
+                                <div class="form-group ">
+                                    <div class="row">
+                                       <div class="col-md-6">
+									   
+									   <label class="form-label">
+	  Ensure that you process this application form together with a detailed motivation (proposal) document.</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="file" class="form-control" name="motivation_letter" id="motivation_letter" required="">
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" onclick="showTerms(event);" class="btn btn-primary waves-effect waves-light">Process Application</button>
+                        </div>
+                        <?php echo form_close(); ?>
+                    </div>
+                </div>
+            </div>
+            <!-- row closed -->
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function showTerms(event){
+            let item = localStorage.getItem('app-accept-terms');
+            if($('#motivation_letter').val() != ''){
+                if(item == null){
+                    event.preventDefault();
+                    event.stopPropagation();
+                    $('#terms-modal-app').modal('show');
+                    return false;
+                }else{
+                    localStorage.removeItem('app-accept-terms')
+                    return true;
+                }
+                
+            }
+        }
+    </script>
+        <?= $footer; ?>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var clubed = '';
+           $('#checkall').click(function(){
+            if($(this). prop("checked") == true){
+                 $(".text-md-nowrap tbody .checkbox").prop("checked",true);  
+                 $.each($(".text-md-nowrap tbody .checkbox:checked"), function(){
+                favorite += $(this).val()+",";
+                });
+                $('#checked_doc').val(favorite);
+            }
+            else
+            {
+                $(this).prop("checked",false);
+                $(".text-md-nowrap tbody .checkbox").prop("checked",false);
+                $.each($(".text-md-nowrap tbody .checkbox:checked"), function(){
+                favorite += $(this).val()+",";
+                });
+                $('#checked_doc').val(favorite);
+            }
+            var favorite ='';
+            $(".text-md-nowrap tbody .checkbox").click(function(){
+            $.each($(".text-md-nowrap tbody .checkbox:checked"), function(){
+                favorite += $(this).val()+",";
+            });
+            $('#checked_doc').val(favorite);
+          });
+            
+        });
+
+           
+       });
+    </script>

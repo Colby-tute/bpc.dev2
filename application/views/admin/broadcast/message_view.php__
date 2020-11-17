@@ -1,0 +1,26 @@
+<?php
+if(count($result) > 0){
+	foreach($result as $message) { ?>
+		<a href="#" class="p-3 d-flex border-bottom">
+	       <div class="wd-90p">
+	            <div class="d-flex">
+	                <h5 class="mb-1 name" style="width: 100%">
+	                	<?= $message->tbl_broadcast_message ?>
+	                	<span class="text-right edit" data-toggle="modal" data-target="#editMessage"  data-message="<?php echo $message->tbl_broadcast_message; ?>" data-id="<?php echo $message->tbl_broadcast_id; ?>" style="float: right;"><i class="fa fa-edit"></i></span>
+		    			<span class="text-right delete" data-id="<?php echo $message->tbl_broadcast_id; ?>" style="float: right;"><i class="fa fa-trash"> </i></span>
+	               	</h5>
+	            </div>
+	            <p class="mb-0 desc"><?= $message->tbl_broadcast_insertdate ?></p>
+	        </div>
+	    </a>
+	<?php }
+}else{ ?>
+	<a href="#" class="p-3 d-flex border-bottom">
+       <div class="wd-90p">
+            <div class="d-flex">
+                <h5 class="mb-1 name">Message List Empty!</h5>
+                </div>
+            <p class="mb-0 desc">Please broadcast Message</p>
+        </div>
+    </a>
+<?php } ?>
