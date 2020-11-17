@@ -300,9 +300,10 @@ $_SESSION['LAST_ACTIVITY'] = time();
 						<li aria-haspopup="true"><a href="<?= site_url('bdsp/BusinessDetails') ?>" class="sub-icon"><i class="typcn typcn-contacts menu-icon"></i> Business Details</a>
 						</li>
 						
-						<li aria-haspopup="true"><a href="#" class="sub-icon"><i class="typcn typcn-document-add menu-icon"></i>Applications <i class="fe fe-chevron-down horizontal-icon"></i></a>
+						<li aria-haspopup="true"><a href="#" class="sub-icon"><i class="typcn typcn-document-add menu-icon"></i>Competitions <i class="fe fe-chevron-down horizontal-icon"></i></a>
 							<ul class="sub-menu">
 								<li aria-haspopup="true"><a href="<?= site_url('bdsp/application') ?>" class="">Incubation & Status</a></li>
+                                                                <li aria-haspopup="true"><a href="<?= site_url('msme/competition') ?>" class="">Manage</a></li>
 							</ul>
 						</li>
 						

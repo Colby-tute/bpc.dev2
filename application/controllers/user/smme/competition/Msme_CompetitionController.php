@@ -61,6 +61,9 @@ class Msme_CompetitionController extends CI_Controller {
                 'tbl_competitions_entry_num'=> $this->input->post('nEnty'),
                 'pre_screeningenddate'=> $this->input->post('psed'),
                 'finalselectionenddate'=> $this->input->post('fsed'),
+                'tbl_competitions_owner' =>$userId,
+                'tbl_competitions_status' => "0",
+                'tbl_competitions_created_date' =>$currdate,
             );
 
             $result = $this->Msme_CompetitionModel->loadData($userId,$newData);

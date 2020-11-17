@@ -45,7 +45,8 @@ class CompetitionController extends CI_Controller{
     //Add Competition
     public function addCompetition(){
         $randNum = mt_rand(100000, 999999);
-     
+        $cdate = date('y-m-d');
+        
          if(empty($this->session->userdata('id_admin'))){
             $userId = $this->session->userdata('id_user');
         }else{
@@ -62,6 +63,10 @@ class CompetitionController extends CI_Controller{
             'tbl_competitions_entry_num'=> $this->input->post('nEnty'),
             'pre_screeningenddate'=> $this->input->post('psed'),
             'finalselectionenddate'=> $this->input->post('fsed'),
+            'tbl_competitions_owner' =>$userId,
+            'tbl_competitions_status' => "1",
+            'tbl_competitions_created_date' =>$cdate,
+            
         );
         
         $result = $this->CompetitionModel->loadData($userId,$newData);
